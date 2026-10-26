@@ -5,8 +5,20 @@ const linkedinUrl =
 
 <header>
 	<nav aria-label="Glavna navigacija">
-		<a class="brand" href="/" aria-label="Hrvoje Marinović, početna stranica">
-			<span class="brand-mark" aria-hidden="true">HM</span>
+		<a
+			class="brand"
+			href="/"
+			aria-label="Hrvoje Marinović, početna stranica"
+		>
+			<span class="brand-photo-wrapper">
+				<img
+					class="brand-photo"
+					src="/hrvoje-marinovic.jpg"
+					alt=""
+					width="96"
+					height="96"
+				/>
+			</span>
 
 			<span class="brand-text">
 				<strong>Hrvoje Marinović</strong>
@@ -29,12 +41,13 @@ const linkedinUrl =
 				target="_blank"
 				rel="noopener noreferrer"
 				aria-label="LinkedIn profil Hrvoja Marinovića"
-				title="LinkedIn profil"
 			>
 				<span aria-hidden="true">in</span>
 			</a>
 
-			<a class="contact-button" href="/#kontakt">Kontakt</a>
+			<a class="contact-button" href="/#kontakt">
+				Kontakt
+			</a>
 		</div>
 	</nav>
 </header>
@@ -46,7 +59,7 @@ const linkedinUrl =
 		z-index: 1000;
 		margin: 0;
 		border-bottom: 1px solid rgba(226, 232, 240, 0.9);
-		background: rgba(255, 255, 255, 0.92);
+		background: rgba(255, 255, 255, 0.94);
 		box-shadow: 0 4px 24px rgba(15, 23, 42, 0.04);
 		backdrop-filter: blur(16px);
 	}
@@ -56,7 +69,7 @@ const linkedinUrl =
 		align-items: center;
 		justify-content: space-between;
 		width: min(1180px, calc(100% - 40px));
-		min-height: 76px;
+		min-height: 78px;
 		margin-inline: auto;
 		gap: 28px;
 	}
@@ -65,33 +78,44 @@ const linkedinUrl =
 		display: inline-flex;
 		flex-shrink: 0;
 		align-items: center;
-		gap: 12px;
+		gap: 13px;
 		color: #0f172a;
 		text-decoration: none;
 	}
 
-	.brand-mark {
+	.brand-photo-wrapper {
 		display: inline-flex;
+		flex-shrink: 0;
 		align-items: center;
 		justify-content: center;
-		width: 42px;
-		height: 42px;
-		border-radius: 12px;
-		background: linear-gradient(135deg, #2563eb, #1d4ed8);
-		box-shadow: 0 8px 20px rgba(37, 99, 235, 0.22);
-		color: #ffffff;
-		font-size: 0.9rem;
-		font-weight: 900;
-		letter-spacing: -0.03em;
+		width: 48px;
+		height: 48px;
+		padding: 3px;
+		border-radius: 50%;
+		background: linear-gradient(135deg, #2563eb, #60a5fa);
+		box-shadow: 0 8px 22px rgba(37, 99, 235, 0.25);
+	}
+
+	.brand-photo {
+		display: block;
+		width: 100%;
+		height: 100%;
+		border: 2px solid #ffffff;
+		border-radius: 50%;
+		background: #e2e8f0;
+		object-fit: cover;
+		object-position: center;
 	}
 
 	.brand-text {
 		display: grid;
-		gap: 2px;
+		gap: 3px;
 	}
 
 	.brand-text strong {
-		font-size: 0.98rem;
+		color: #0f172a;
+		font-size: 1rem;
+		font-weight: 800;
 		line-height: 1.2;
 	}
 
@@ -217,9 +241,13 @@ const linkedinUrl =
 			gap: 12px;
 		}
 
-		.brand-mark {
-			width: 38px;
-			height: 38px;
+		.brand-photo-wrapper {
+			width: 42px;
+			height: 42px;
+		}
+
+		.brand-text strong {
+			font-size: 0.92rem;
 		}
 
 		.brand-text small {
@@ -232,6 +260,19 @@ const linkedinUrl =
 
 		.contact-button {
 			padding-inline: 13px;
+		}
+	}
+
+	@media (max-width: 390px) {
+		.brand-text strong {
+			max-width: 115px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+
+		.contact-button {
+			font-size: 0.8rem;
 		}
 	}
 </style>
