@@ -2,110 +2,687 @@
 import BaseHead from '../../components/BaseHead.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
 import { getCollection } from 'astro:content';
-import FormattedDate from '../../components/FormattedDate.astro';
+
+const pageTitle = 'Blog i stručni članci | Hrvoje Marinović';
+
+const pageDescription =
+	'Praktični članci o Microsoft 365, Microsoft Intuneu, Windows Autopilotu, upravljanju uređajima, automatizaciji i informacijskoj sigurnosti.';
 
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
+
+const formatDate = (date: Date) =>
+	new Intl.DateTimeFormat('hr-HR', {
+		day: 'numeric',
+		month: 'long',
+		year: 'numeric',
+	}).format(date);
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="hr">
 	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-		<style>
-			main {
-				width: 960px;
-			}
-			ul {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 2rem;
-				list-style-type: none;
-				margin: 0;
-				padding: 0;
-			}
-			ul li {
-				width: calc(50% - 1rem);
-			}
-			ul li * {
-				text-decoration: none;
-				transition: 0.2s ease;
-			}
-			ul li:first-child {
-				width: 100%;
-				margin-bottom: 1rem;
-				text-align: center;
-			}
-			ul li:first-child img {
-				width: 100%;
-			}
-			ul li:first-child .title {
-				font-size: 2.369rem;
-			}
-			ul li img {
-				margin-bottom: 0.5rem;
-				border-radius: 12px;
-			}
-			ul li a {
-				display: block;
-			}
-			.title {
-				margin: 0;
-				color: rgb(var(--black));
-				line-height: 1;
-			}
-			.date {
-				margin: 0;
-				color: rgb(var(--gray));
-			}
-			ul li a:hover h4,
-			ul li a:hover .date {
-				color: rgb(var(--accent));
-			}
-			ul a:hover img {
-				box-shadow: var(--box-shadow);
-			}
-			@media (max-width: 720px) {
-				ul {
-					gap: 0.5em;
-				}
-				ul li {
-					width: 100%;
-					text-align: center;
-				}
-				ul li:first-child {
-					margin-bottom: 0;
-				}
-				ul li:first-child .title {
-					font-size: 1.563em;
-				}
-			}
-		</style>
+		<BaseHead title={pageTitle} description={pageDescription} />
 	</head>
+
 	<body>
 		<Header />
+
 		<main>
-			<section>
-				<ul>
-					{
-						posts.map((post) => (
-							<li>
-								<a href={`/blog/${post.id}/`}>
-									<img width={720} height={360} src={post.data.heroImage} alt="" />
-									<h4 class="title">{post.data.title}</h4>
-									<p class="date">
-										<FormattedDate date={post.data.pubDate} />
-									</p>
+			<section class="blog-hero">
+				<div class="blog-hero-content">
+					<div class="author-intro">
+						<img
+							class="author-photo"
+							src="/hrvoje-marinovic.jpg"
+							alt="Portret autora web-stranice"
+							width="96"
+							height="96"
+						/>
+
+						<div>
+							<p class="eyebrow">BLOG I STRUČNI ČLANCI</p>
+							<p class="author-name">Hrvoje Marinović</p>
+						</div>
+					</div>
+
+					<h1>
+						Praktična iskustva iz
+						<span>Microsoft IT okruženja</span>
+					</h1>
+
+					<p class="hero-description">
+						Članci, vodiči i bilješke o Microsoftu 365, Microsoft
+						Intuneu, Windows Autopilotu, upravljanju uređajima,
+						automatizaciji i informacijskoj sigurnosti.
+					</p>
+
+					<div class="topic-list" aria-label="Teme bloga">
+						<span>Microsoft 365</span>
+						<span>Microsoft Intune</span>
+						<span>Windows Autopilot</span>
+						<span>Endpoint Security</span>
+						<span>Automatizacija</span>
+					</div>
+				</div>
+
+				<aside class="blog-note">
+					<p class="note-label">ŠTO MOŽETE OČEKIVATI</p>
+
+					<h2>Iskustva primjenjiva u stvarnom IT okruženju</h2>
+
+					<p>
+						Naglasak je na praktičnoj primjeni, sigurnom uvođenju
+						promjena, standardizaciji uređaja i rješenjima koja se
+						mogu dugoročno održavati.
+					</p>
+				</aside>
+			</section>
+
+			<section class="articles-section">
+				<div class="section-heading">
+					<div>
+						<p class="section-label">OBJAVE</p>
+						<h2>Najnoviji članci</h2>
+					</div>
+
+					<p>
+						Praktični sadržaj namijenjen IT administratorima,
+						organizacijama i svima koji žele bolje razumjeti moderno
+						Microsoftovo radno okruženje.
+					</p>
+				</div>
+
+				{
+					posts.length > 0 ? (
+						<div class="articles-grid">
+							{posts.map((post, index) => (
+								<article
+									class:list={[
+										'article-card',
+										{ featured: index === 0 },
+									]}
+								>
+									<a
+										class="article-link"
+										href={`/blog/${post.id}/`}
+										aria-label={`Otvori članak: ${post.data.title}`}
+									>
+										<div class="image-wrapper">
+											<img
+												src={post.data.heroImage}
+												alt=""
+												width="720"
+												height="400"
+												loading={index === 0 ? 'eager' : 'lazy'}
+											/>
+
+											<span class="article-number">
+												{String(index + 1).padStart(2, '0')}
+											</span>
+										</div>
+
+										<div class="article-content">
+											<p class="article-meta">
+												<span>Stručni članak</span>
+												<span aria-hidden="true">•</span>
+												<time datetime={post.data.pubDate.toISOString()}>
+													{formatDate(post.data.pubDate)}
+												</time>
+											</p>
+
+											<h3>{post.data.title}</h3>
+
+											<p class="article-description">
+												{post.data.description}
+											</p>
+
+											<span class="read-more">
+												Pročitajte članak
+												<span aria-hidden="true">→</span>
+											</span>
+										</div>
+									</a>
+								</article>
+							))}
+						</div>
+					) : (
+						<div class="empty-state">
+							<div class="empty-icon" aria-hidden="true">HM</div>
+
+							<div>
+								<p class="section-label">USKORO</p>
+								<h2>Prvi stručni članci su u pripremi</h2>
+
+								<p>
+									Prvi članak obradit će Windows Autopilot,
+									njegovu povezanost s Microsoft Intuneom i
+									scenarije u kojima automatizirana priprema
+									Windows uređaja donosi stvarnu vrijednost.
+								</p>
+
+								<a class="button" href="/#kontakt">
+									Pošaljite prijedlog teme
 								</a>
-							</li>
-						))
-					}
-				</ul>
+							</div>
+						</div>
+					)
+				}
+			</section>
+
+			<section class="topics-section">
+				<div class="topics-card">
+					<div>
+						<p class="section-label light">PLANIRANE TEME</p>
+
+						<h2>O čemu ću pisati?</h2>
+
+						<p>
+							Sadržaj će se temeljiti na praktičnom radu,
+							testiranju, dokumentiranju i sigurnom uvođenju
+							Microsoftovih tehnologija.
+						</p>
+					</div>
+
+					<ul>
+						<li>Windows Autopilot i automatizirana priprema uređaja</li>
+						<li>Microsoft Intune konfiguracije i politike</li>
+						<li>Upravljanje aplikacijama i Windows ažuriranjima</li>
+						<li>Microsoft Entra ID, MFA i upravljanje pristupom</li>
+						<li>Microsoft Defender i sigurnost krajnjih uređaja</li>
+						<li>Standardizacija IT okruženja u školama i ustanovama</li>
+					</ul>
+				</div>
 			</section>
 		</main>
+
 		<Footer />
 	</body>
 </html>
+
+<style>
+	:global(*) {
+		box-sizing: border-box;
+	}
+
+	:global(html) {
+		scroll-behavior: smooth;
+		scroll-padding-top: 110px;
+	}
+
+	:global(body) {
+		margin: 0;
+		background:
+			radial-gradient(
+				circle at 88% 7%,
+				rgba(37, 99, 235, 0.13),
+				transparent 30rem
+			),
+			#f8fafc;
+		color: #0f172a;
+		font-family:
+			Inter,
+			ui-sans-serif,
+			system-ui,
+			-apple-system,
+			BlinkMacSystemFont,
+			"Segoe UI",
+			sans-serif;
+	}
+
+	main {
+		width: 100%;
+		max-width: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.blog-hero,
+	.articles-section,
+	.topics-section {
+		width: min(1180px, calc(100% - 40px));
+		margin-inline: auto;
+	}
+
+	.blog-hero {
+		display: grid;
+		grid-template-columns: minmax(0, 1.35fr) minmax(290px, 0.65fr);
+		gap: 64px;
+		align-items: center;
+		min-height: 610px;
+		padding-block: 88px;
+	}
+
+	.author-intro {
+		display: flex;
+		align-items: center;
+		gap: 15px;
+		margin-bottom: 30px;
+	}
+
+	.author-photo {
+		display: block;
+		width: 72px;
+		height: 72px;
+		padding: 3px;
+		border: 2px solid #60a5fa;
+		border-radius: 50%;
+		background: #ffffff;
+		box-shadow: 0 12px 28px rgba(37, 99, 235, 0.2);
+		object-fit: cover;
+		object-position: center;
+	}
+
+	.eyebrow,
+	.section-label,
+	.note-label {
+		margin: 0 0 8px;
+		color: #2563eb;
+		font-size: 0.76rem;
+		font-weight: 850;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+	}
+
+	.author-name {
+		margin: 0;
+		color: #334155;
+		font-size: 0.9rem;
+		font-weight: 750;
+	}
+
+	h1,
+	h2,
+	h3,
+	p {
+		margin-top: 0;
+	}
+
+	h1 {
+		max-width: 820px;
+		margin-bottom: 28px;
+		font-size: clamp(2.8rem, 6vw, 5.6rem);
+		line-height: 0.98;
+		letter-spacing: -0.055em;
+	}
+
+	h1 span {
+		display: block;
+		color: #2563eb;
+	}
+
+	h2 {
+		font-size: clamp(2rem, 4vw, 3.2rem);
+		line-height: 1.08;
+		letter-spacing: -0.04em;
+	}
+
+	h3 {
+		font-size: clamp(1.35rem, 2vw, 1.9rem);
+		line-height: 1.24;
+		letter-spacing: -0.025em;
+	}
+
+	p {
+		color: #475569;
+		line-height: 1.75;
+	}
+
+	.hero-description {
+		max-width: 740px;
+		margin-bottom: 30px;
+		font-size: 1.1rem;
+	}
+
+	.topic-list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+	}
+
+	.topic-list span {
+		padding: 8px 12px;
+		border: 1px solid #dbeafe;
+		border-radius: 999px;
+		background: #eff6ff;
+		color: #1d4ed8;
+		font-size: 0.83rem;
+		font-weight: 750;
+	}
+
+	.blog-note {
+		padding: 34px;
+		border: 1px solid rgba(148, 163, 184, 0.3);
+		border-radius: 24px;
+		background: rgba(255, 255, 255, 0.88);
+		box-shadow: 0 24px 70px rgba(15, 23, 42, 0.1);
+		backdrop-filter: blur(14px);
+	}
+
+	.blog-note h2 {
+		margin-bottom: 22px;
+		font-size: 1.7rem;
+	}
+
+	.blog-note p:last-child {
+		margin-bottom: 0;
+	}
+
+	.articles-section {
+		padding-block: 95px 110px;
+		border-top: 1px solid #e2e8f0;
+	}
+
+	.section-heading {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 60px;
+		align-items: end;
+		margin-bottom: 44px;
+	}
+
+	.section-heading h2 {
+		margin-bottom: 0;
+	}
+
+	.section-heading > p {
+		margin-bottom: 0;
+		font-size: 1.03rem;
+	}
+
+	.articles-grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 24px;
+	}
+
+	.article-card {
+		min-width: 0;
+		overflow: hidden;
+		border: 1px solid #e2e8f0;
+		border-radius: 22px;
+		background: #ffffff;
+		box-shadow: 0 12px 40px rgba(15, 23, 42, 0.06);
+		transition:
+			transform 180ms ease,
+			box-shadow 180ms ease;
+	}
+
+	.article-card:hover {
+		transform: translateY(-4px);
+		box-shadow: 0 20px 55px rgba(15, 23, 42, 0.11);
+	}
+
+	.article-card.featured {
+		grid-column: 1 / -1;
+	}
+
+	.article-card.featured .article-link {
+		display: grid;
+		grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+		align-items: stretch;
+	}
+
+	.article-link {
+		display: block;
+		height: 100%;
+		color: inherit;
+		text-decoration: none;
+	}
+
+	.image-wrapper {
+		position: relative;
+		min-height: 250px;
+		overflow: hidden;
+		background: linear-gradient(135deg, #0f172a, #1e40af);
+	}
+
+	.image-wrapper img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		min-height: 250px;
+		object-fit: cover;
+		transition: transform 300ms ease;
+	}
+
+	.article-card:hover .image-wrapper img {
+		transform: scale(1.025);
+	}
+
+	.article-number {
+		position: absolute;
+		top: 18px;
+		right: 18px;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 42px;
+		height: 42px;
+		border: 1px solid rgba(255, 255, 255, 0.4);
+		border-radius: 12px;
+		background: rgba(15, 23, 42, 0.72);
+		color: #ffffff;
+		font-size: 0.78rem;
+		font-weight: 900;
+		backdrop-filter: blur(10px);
+	}
+
+	.article-content {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		padding: 30px;
+	}
+
+	.article-meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		margin: 0 0 16px;
+		color: #64748b;
+		font-size: 0.8rem;
+		font-weight: 700;
+	}
+
+	.article-meta span:first-child {
+		color: #2563eb;
+	}
+
+	.article-content h3 {
+		margin-bottom: 16px;
+		color: #0f172a;
+	}
+
+	.article-description {
+		margin-bottom: 24px;
+	}
+
+	.read-more {
+		display: inline-flex;
+		gap: 8px;
+		align-items: center;
+		margin-top: auto;
+		color: #1d4ed8;
+		font-size: 0.9rem;
+		font-weight: 800;
+	}
+
+	.empty-state {
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr);
+		gap: 34px;
+		align-items: center;
+		padding: 48px;
+		border: 1px solid #dbeafe;
+		border-radius: 24px;
+		background: #eff6ff;
+	}
+
+	.empty-icon {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 94px;
+		height: 94px;
+		border-radius: 24px;
+		background: linear-gradient(135deg, #2563eb, #1d4ed8);
+		box-shadow: 0 18px 35px rgba(37, 99, 235, 0.25);
+		color: #ffffff;
+		font-size: 1.2rem;
+		font-weight: 900;
+	}
+
+	.empty-state h2 {
+		margin-bottom: 16px;
+		font-size: clamp(1.8rem, 4vw, 2.8rem);
+	}
+
+	.empty-state p {
+		max-width: 760px;
+	}
+
+	.button {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 48px;
+		padding: 11px 20px;
+		border-radius: 11px;
+		background: #2563eb;
+		box-shadow: 0 10px 24px rgba(37, 99, 235, 0.22);
+		color: #ffffff;
+		font-weight: 800;
+		text-decoration: none;
+	}
+
+	.topics-section {
+		padding-bottom: 100px;
+	}
+
+	.topics-card {
+		display: grid;
+		grid-template-columns: 0.85fr 1.15fr;
+		gap: 64px;
+		padding: 64px;
+		border-radius: 28px;
+		background:
+			radial-gradient(
+				circle at 90% 15%,
+				rgba(59, 130, 246, 0.45),
+				transparent 28rem
+			),
+			#0f172a;
+		color: #ffffff;
+	}
+
+	.section-label.light {
+		color: #93c5fd;
+	}
+
+	.topics-card h2 {
+		color: #ffffff;
+	}
+
+	.topics-card p {
+		color: #cbd5e1;
+	}
+
+	.topics-card ul {
+		display: grid;
+		gap: 15px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.topics-card li {
+		position: relative;
+		padding-left: 28px;
+		color: #dbeafe;
+		line-height: 1.55;
+	}
+
+	.topics-card li::before {
+		position: absolute;
+		top: 0;
+		left: 0;
+		color: #60a5fa;
+		font-weight: 900;
+		content: "✓";
+	}
+
+	a:focus-visible {
+		outline: 3px solid rgba(37, 99, 235, 0.35);
+		outline-offset: 4px;
+	}
+
+	@media (max-width: 900px) {
+		.blog-hero,
+		.section-heading,
+		.topics-card {
+			grid-template-columns: 1fr;
+		}
+
+		.blog-hero {
+			gap: 40px;
+			min-height: auto;
+			padding-block: 70px;
+		}
+
+		.article-card.featured .article-link {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	@media (max-width: 650px) {
+		.blog-hero,
+		.articles-section,
+		.topics-section {
+			width: min(100% - 28px, 1180px);
+		}
+
+		.blog-hero {
+			padding-block: 50px 60px;
+		}
+
+		h1 {
+			font-size: clamp(2.5rem, 14vw, 4.3rem);
+		}
+
+		.author-photo {
+			width: 60px;
+			height: 60px;
+		}
+
+		.articles-section {
+			padding-block: 65px 75px;
+		}
+
+		.articles-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.article-card.featured {
+			grid-column: auto;
+		}
+
+		.empty-state {
+			grid-template-columns: 1fr;
+			padding: 30px 22px;
+		}
+
+		.empty-icon {
+			width: 72px;
+			height: 72px;
+			border-radius: 18px;
+		}
+
+		.topics-card {
+			gap: 34px;
+			padding: 34px 24px;
+		}
+	}
+</style>
